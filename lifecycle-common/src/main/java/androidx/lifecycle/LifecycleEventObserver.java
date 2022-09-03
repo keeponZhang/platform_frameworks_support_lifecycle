@@ -36,5 +36,6 @@ public interface LifecycleEventObserver extends LifecycleObserver {
      * @param source The source of the event
      * @param event The event
      */
+    //是个接口，的找它的实现类ReflectiveGenericLifecycleObserver（LifecycleRegistry设置进去的）
     void onStateChanged(@NonNull LifecycleOwner source, @NonNull Lifecycle.Event event);
 }

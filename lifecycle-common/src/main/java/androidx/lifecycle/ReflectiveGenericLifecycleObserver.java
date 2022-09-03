@@ -30,7 +30,7 @@ class ReflectiveGenericLifecycleObserver implements LifecycleEventObserver {
         mWrapped = wrapped;
         mInfo = ClassesInfoCache.sInstance.getInfo(mWrapped.getClass());
     }
-
+    //一看类名，毛事就准备要通过反射来调用咱们的回调方式
     @Override
     public void onStateChanged(LifecycleOwner source, Event event) {
         mInfo.invokeCallbacks(source, event, mWrapped);

@@ -127,6 +127,7 @@ public class LifecycleRegistry extends Lifecycle {
      * @param event The event that was received
      */
     public void handleLifecycleEvent(@NonNull Event event) {
+        //获得下一个状态
         State next = getStateAfter(event);
         moveToState(next);
     }
@@ -142,6 +143,7 @@ public class LifecycleRegistry extends Lifecycle {
             return;
         }
         mHandlingEvent = true;
+        //看一下核心逻辑
         sync();
         mHandlingEvent = false;
     }
@@ -297,6 +299,7 @@ public class LifecycleRegistry extends Lifecycle {
             while ((observer.mState.compareTo(mState) < 0 && !mNewEventOccurred
                     && mObserverMap.contains(entry.getKey()))) {
                 pushParentState(observer.mState);
+                //开始分发时间了
                 observer.dispatchEvent(lifecycleOwner, upEvent(observer.mState));
                 popParentState();
             }

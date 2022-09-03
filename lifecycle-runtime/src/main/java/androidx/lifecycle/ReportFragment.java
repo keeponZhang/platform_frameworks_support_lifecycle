@@ -116,7 +116,7 @@ public class ReportFragment extends Fragment {
             ((LifecycleRegistryOwner) activity).getLifecycle().handleLifecycleEvent(event);
             return;
         }
-
+        //当时肯定走它，因为目前的Activity是实现了LifecycleOwner
         if (activity instanceof LifecycleOwner) {
             Lifecycle lifecycle = ((LifecycleOwner) activity).getLifecycle();
             if (lifecycle instanceof LifecycleRegistry) {

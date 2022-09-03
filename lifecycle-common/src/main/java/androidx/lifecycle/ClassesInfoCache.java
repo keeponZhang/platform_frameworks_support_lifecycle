@@ -121,6 +121,7 @@ class ClassesInfoCache {
 
         Method[] methods = declaredMethods != null ? declaredMethods : getDeclaredMethods(klass);
         boolean hasLifecycleMethods = false;
+        //看到木有，开始解析我们的注解了
         for (Method method : methods) {
             OnLifecycleEvent annotation = method.getAnnotation(OnLifecycleEvent.class);
             if (annotation == null) {
@@ -156,6 +157,7 @@ class ClassesInfoCache {
             verifyAndPutHandler(handlerToEvent, methodReference, event, klass);
         }
         CallbackInfo info = new CallbackInfo(handlerToEvent);
+        //最终将解析到的方法信息封装成CallbackInfo对象，最终缓存到map当中
         mCallbackMap.put(klass, info);
         mHasLifecycleMethods.put(klass, hasLifecycleMethods);
         return info;
@@ -207,7 +209,7 @@ class ClassesInfoCache {
             mMethod = method;
             mMethod.setAccessible(true);
         }
-
+        //这里就直接开始反射调用方法了，那我们标注的注解是在哪里解析的呢（ReflectiveGenericLifecycleObserver.CallbackInfo
         void invokeCallback(LifecycleOwner source, Lifecycle.Event event, Object target) {
             //noinspection TryWithIdenticalCatches
             try {
