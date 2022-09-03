@@ -24,7 +24,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
-import androidx.lifecycle.ViewModelProvider.Factory;
 
 /**
  * Utilities methods for {@link ViewModelStore} class.
@@ -120,6 +119,7 @@ public class ViewModelProviders {
     public static ViewModelProvider of(@NonNull FragmentActivity activity,
             @Nullable Factory factory) {
         Application application = checkApplication(activity);
+        //由于factory==null，所以进入这个条件
         if (factory == null) {
             factory = ViewModelProvider.AndroidViewModelFactory.getInstance(application);
         }

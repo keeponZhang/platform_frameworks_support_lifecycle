@@ -21,7 +21,6 @@ import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 import androidx.annotation.NonNull;
-import androidx.lifecycle.ViewModelProvider.NewInstanceFactory;
 
 import org.junit.Assert;
 import org.junit.Before;
