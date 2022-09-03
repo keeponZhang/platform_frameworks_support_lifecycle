@@ -16,7 +16,6 @@
 
 package androidx.lifecycle.viewmodel.savedstate
 
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.SavedStateHandle
 import androidx.test.annotation.UiThreadTest
 import androidx.test.espresso.base.MainThread

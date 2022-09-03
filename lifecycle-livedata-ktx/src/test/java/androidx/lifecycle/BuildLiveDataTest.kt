@@ -528,7 +528,7 @@ class BuildLiveDataTest {
 
     inner class CollectingObserver<T>(
         private val liveData: LiveData<T>
-    ) : Observer<T> {
+    ) {
         private var items = mutableListOf<T>()
         override fun onChanged(t: T) {
             items.add(t)

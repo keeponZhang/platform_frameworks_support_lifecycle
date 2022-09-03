@@ -69,18 +69,17 @@ public abstract class LiveData<T> {
     // how many observers are in active state
     @SuppressWarnings("WeakerAccess") /* synthetic access */
     int mActiveCount = 0;
-    private volatile Object mData;
+    private volatile Object mData = NOT_SET;
     // when setData is called, we set the pending data and actual data swap happens on the main
     // thread
     @SuppressWarnings("WeakerAccess") /* synthetic access */
     volatile Object mPendingData = NOT_SET;
-    private int mVersion;
+    private int mVersion = START_VERSION;
 
     private boolean mDispatchingValue;
     @SuppressWarnings("FieldCanBeLocal")
     private boolean mDispatchInvalidated;
     private final Runnable mPostValueRunnable = new Runnable() {
-        @SuppressWarnings("unchecked")
         @Override
         public void run() {
             Object newValue;
@@ -88,29 +87,11 @@ public abstract class LiveData<T> {
                 newValue = mPendingData;
                 mPendingData = NOT_SET;
             }
+            //noinspection unchecked
             setValue((T) newValue);
         }
     };
-
-    /**
-     * Creates a LiveData initialized with the given {@code value}.
-     *
-     * @param value initial value
-     */
-    public LiveData(T value) {
-        mData = value;
-        mVersion = START_VERSION + 1;
-    }
-
-    /**
-     * Creates a LiveData with no value assigned to it.
-     */
-    public LiveData() {
-        mData = NOT_SET;
-        mVersion = START_VERSION;
-    }
-
-    @SuppressWarnings("unchecked")
+    // 而从这个方法可以看到，有三处可以拦截onChanged()方法的回调：
     private void considerNotify(ObserverWrapper observer) {
         if (!observer.mActive) {
             return;
@@ -128,6 +109,7 @@ public abstract class LiveData<T> {
             return;
         }
         observer.mLastVersion = mVersion;
+        //noinspection unchecked
         observer.mObserver.onChanged((T) mData);
     }
 
@@ -222,7 +204,7 @@ public abstract class LiveData<T> {
         assertMainThread("observeForever");
         AlwaysActiveObserver wrapper = new AlwaysActiveObserver(observer);
         ObserverWrapper existing = mObservers.putIfAbsent(observer, wrapper);
-        if (existing instanceof LiveData.LifecycleBoundObserver) {
+        if (existing != null && existing instanceof LiveData.LifecycleBoundObserver) {
             throw new IllegalArgumentException("Cannot add the same observer"
                     + " with different lifecycles");
         }
@@ -314,11 +296,11 @@ public abstract class LiveData<T> {
      *
      * @return the current value
      */
-    @SuppressWarnings("unchecked")
     @Nullable
     public T getValue() {
         Object data = mData;
         if (data != NOT_SET) {
+            //noinspection unchecked
             return (T) data;
         }
         return null;
@@ -371,7 +353,7 @@ public abstract class LiveData<T> {
         return mActiveCount > 0;
     }
 
-    class LifecycleBoundObserver extends ObserverWrapper implements LifecycleEventObserver {
+    class LifecycleBoundObserver extends ObserverWrapper implements GenericLifecycleObserver {
         @NonNull
         final LifecycleOwner mOwner;
 
@@ -386,8 +368,7 @@ public abstract class LiveData<T> {
         }
 
         @Override
-        public void onStateChanged(@NonNull LifecycleOwner source,
-                @NonNull Lifecycle.Event event) {
+        public void onStateChanged(LifecycleOwner source, Lifecycle.Event event) {
             if (mOwner.getLifecycle().getCurrentState() == DESTROYED) {
                 removeObserver(mObserver);
                 return;
@@ -457,7 +438,7 @@ public abstract class LiveData<T> {
         }
     }
 
-    static void assertMainThread(String methodName) {
+    private static void assertMainThread(String methodName) {
         if (!ArchTaskExecutor.getInstance().isMainThread()) {
             throw new IllegalStateException("Cannot invoke " + methodName + " on a background"
                     + " thread");
