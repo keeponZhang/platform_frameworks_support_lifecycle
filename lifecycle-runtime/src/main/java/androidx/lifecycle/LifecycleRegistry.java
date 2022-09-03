@@ -126,7 +126,7 @@ public class LifecycleRegistry extends Lifecycle {
      *
      * @param event The event that was received
      */
-    public void handleLifecycleEvent(@NonNull Lifecycle.Event event) {
+    public void handleLifecycleEvent(@NonNull Event event) {
         State next = getStateAfter(event);
         moveToState(next);
     }

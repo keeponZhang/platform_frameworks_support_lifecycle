@@ -24,8 +24,6 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.core.util.Pair;
 import androidx.lifecycle.Lifecycle;
-import androidx.lifecycle.LifecycleRegistry;
-import androidx.lifecycle.LifecycleRegistryOwner;
 
 import java.util.ArrayList;
 import java.util.List;

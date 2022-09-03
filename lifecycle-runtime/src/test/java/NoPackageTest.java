@@ -22,7 +22,6 @@ import static org.mockito.Mockito.when;
 
 import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.LifecycleOwner;
-import androidx.lifecycle.LifecycleRegistry;
 
 import org.junit.Before;
 import org.junit.Test;

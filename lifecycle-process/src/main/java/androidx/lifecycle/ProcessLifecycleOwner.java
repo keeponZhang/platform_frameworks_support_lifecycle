@@ -24,7 +24,6 @@ import android.os.Handler;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.VisibleForTesting;
-import androidx.lifecycle.ReportFragment.ActivityInitializationListener;
 
 /**
  * Class that provides lifecycle for the whole application process.
